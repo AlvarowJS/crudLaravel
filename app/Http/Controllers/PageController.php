@@ -7,8 +7,13 @@ use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
-    public function home(){
-        return view('home');
+    public function home(Request $request){
+        $search = $request->search;
+        $posts = Post::where('title','LIKE',"%{$search}%")
+            ->with('user')
+            ->latest()->paginate();
+        
+        return view('home',  ['posts' => $posts]);
     }
     public function blog(){        
         // $posts = Post::get();
@@ -16,7 +21,7 @@ class PageController extends Controller
         // $post = Post::find(12);
         // dd($post);
         // paginacion decendente
-        $posts = Post::latest()->paginate();
+        
 
         // dd($posts);
         // colleocion de datos
